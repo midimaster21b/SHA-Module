@@ -41,16 +41,16 @@ const uint32_t sha_constants[] = {
   0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-
 uint32_t right_rotate(uint32_t value, int rotate);
 
 int main(int argc, char *argv[]) {
   uint32_t message_length; // L: message length in bits..? (in bytes in this implementation)
+  uint32_t message_bits;
   unsigned int padded_message_buffer_size = 0;
   unsigned int num_padded_blocks = 1;
 
-  char *padded_message;
-  char *padded_message_block;
+  uint32_t *padded_message;
+  uint32_t *padded_message_block;
 
   uint32_t hash[8]         = {0};
   uint32_t working_hash[8] = {0};
@@ -69,11 +69,9 @@ int main(int argc, char *argv[]) {
   /* Pre-processing (Padding): */
   /* begin with the original message of length L bits */
   message_length = strlen(argv[1]);
-
   printf("Message length in bits: %d\n", message_length*8);
 
   num_padded_blocks = (padded_message_buffer_size/64) + 1;
-
   printf("Number of 512 bit blocks in padded message: %d\n", num_padded_blocks);
 
   // Allocate space for padded message (64 bytes per 512 bit chunk)
@@ -84,17 +82,32 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  // Copy message into padded message
+  memcpy(padded_message, argv[1], message_length * sizeof(char));
+
   // Append a single '1' bit
   // Append a variable number of '0' bits (out to a length of padded_message_length%512 == (512-64-1)
-  padded_message[message_length] = 0x80;
-
+  int append_index = (message_length/4);
+  /* printf("Appending 1 at %d shift %d: %08x\n", append_index, message_length%4, padded_message[append_index]); */
+  padded_message[append_index] |= 0x80 << ((message_length%4) * 8);
+  /* printf("Appending 1 at %d shift %d: %08x\n", append_index, message_length%4, padded_message[append_index]); */
 
   // Append initial message length(in bits) as a 64-bit big-endian integer
   /* *padded_message[(PADDED_BLOCK_SIZE * num_padded_blocks) - 4] = message_length; */
-  memcpy(&padded_message[(PADDED_BLOCK_SIZE * num_padded_blocks) - 4],
-	 (char *)&message_length,
-	 sizeof(message_length));
+  message_bits = message_length*8;
+  /* printf("Message length: %d\n", message_length*8); */
+  /* memcpy(padded_message + ((num_padded_blocks) - 4), */
 
+  /* int length_index = (((PADDED_BLOCK_SIZE * num_padded_blocks) / 8) - 4 - 1); */
+  int length_index = sizeof(padded_message) - 1;
+  printf("Index: %d\n", length_index);
+  printf("Message length: %d\n", *(padded_message + length_index));
+  /* memcpy(padded_message + ((PADDED_BLOCK_SIZE * num_padded_blocks) - 4), */
+  memcpy(padded_message + length_index,
+	 (char *)&message_bits,
+	 sizeof(message_bits));
+  /* printf("Message length: %d\n", *(padded_message + ((PADDED_BLOCK_SIZE * num_padded_blocks) - 4))); */
+  printf("Message length: %d\n", *(padded_message + length_index));
 
 
   // Allocate space from temporary working block
@@ -105,10 +118,19 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  // Print padded message
+  printf("Size of padded message: %ld\n", sizeof(padded_message));
+
+  for(int y=0; y<sizeof(padded_message_block); y++) {
+    printf("Message %d: %08x\n", y, padded_message[y]);
+  }
+
 
   /* Process the message in successive 512-bit chunks: */
   /* for each chunk */
   for(int block_num=0; block_num < num_padded_blocks; block_num++) {
+    printf("blox #%d\n", block_num);
+
     // break message into 512-bit chunks
     memcpy(padded_message_block, padded_message + (PADDED_BLOCK_SIZE * num_padded_blocks) - 4, PADDED_BLOCK_SIZE);
 
