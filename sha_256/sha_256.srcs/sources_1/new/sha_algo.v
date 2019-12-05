@@ -236,7 +236,7 @@ module sha_algo(
 	 compression_regs_s[5] <= compression_regs_s[4];
 	 compression_regs_s[4] <= compression_regs_s[3]
 				  + (
-				     compression_regs_s[7] // h
+				     compression_regs_s[7]                                             // h
 				     + ({compression_regs_s[4][5:0], compression_regs_s[4][31:6]}      // e rotate 6
 					^ {compression_regs_s[4][10:0], compression_regs_s[4][31:11]}  // e rotate 11
 					^ {compression_regs_s[4][24:0], compression_regs_s[4][31:25]}) // e rotate 25
@@ -251,7 +251,7 @@ module sha_algo(
 	 compression_regs_s[1] <= compression_regs_s[0];
 	 // compression_regs_s[0] <= temp1 + temp2;
 	 compression_regs_s[0] <= ( //temp1
-				   compression_regs_s[7] // h
+				   compression_regs_s[7]                                             // h
 				   + ({compression_regs_s[4][5:0], compression_regs_s[4][31:6]}      // e rotate 6
 				      ^ {compression_regs_s[4][10:0], compression_regs_s[4][31:11]}  // e rotate 11
 				      ^ {compression_regs_s[4][24:0], compression_regs_s[4][31:25]}) // e rotate 25
@@ -300,7 +300,7 @@ module sha_algo(
    end
 
 
-   always @* begin
+   always @(posedge clk_p) begin
       calc_constants[0]  = 32'h428a2f98;
       calc_constants[1]  = 32'h71374491;
       calc_constants[2]  = 32'hb5c0fbcf;
@@ -365,6 +365,18 @@ module sha_algo(
       calc_constants[61] = 32'ha4506ceb;
       calc_constants[62] = 32'hbef9a3f7;
       calc_constants[63] = 32'hc67178f2;
+   end
+
+
+   always @(posedge clk_p) begin
+      if(curr_state_s == `COMPRESSION_STATE) begin
+	 compression_iter_s <= compression_iter_s + 1;
+
+      end
+      else begin
+	 compression_iter_s <= 0;
+
+      end
    end
 
 endmodule
