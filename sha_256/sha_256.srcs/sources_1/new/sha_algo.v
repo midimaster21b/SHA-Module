@@ -161,11 +161,19 @@ module sha_algo(
       else if(curr_state_s == `MAKE_WEIGHTS_STATE) begin
 	 for(weight_i=16; weight_i<64; weight_i = weight_i+1) begin
 
-	    s0[weight_i] = right_rotate(weights[weight_i-15], 7) ^ right_rotate(weights[weight_i-15], 18) ^ right_rotate(weights[weight_i-15], 3);
+	    // s0[weight_i] = right_rotate(weights[weight_i-15], 7) ^ right_rotate(weights[weight_i-15], 18) ^ right_rotate(weights[weight_i-15], 3);
 	    // s1[weight_i] = right_rotate(weights[weight_i-15], 7);
 	    // w0[weight_i] = right_rotate(weights[weight_i-15], 18);
 	    // w1[weight_i] = right_rotate(weights[weight_i-15], 3);
-	    s1[weight_i] = right_rotate(weights[weight_i-2], 17) ^ right_rotate(weights[weight_i-2], 19) ^ right_rotate(weights[weight_i-2], 10);
+
+	    s0[weight_i] = {weights[weight_i-15][6:0], weights[weight_i-15][31:7]} ^ {weights[weight_i-15][17:0], weights[weight_i-15][31:18]} ^ (weights[weight_i-15] >> 3);
+	    // s1[weight_i] = {weights[weight_i-15][6:0], weights[weight_i-15][31:7]};
+	    // w0[weight_i] = {weights[weight_i-15][17:0], weights[weight_i-15][31:18]};
+	    // w1[weight_i] = {weights[weight_i-15][2:0], weights[weight_i-15][31:3]};
+
+
+	    // s1[weight_i] = right_rotate(weights[weight_i-2], 17) ^ right_rotate(weights[weight_i-2], 19) ^ right_rotate(weights[weight_i-2], 10);
+	    // s1[weight_i] = right_rotate(weights[weight_i-2], 17) ^ right_rotate(weights[weight_i-2], 19) ^ right_rotate(weights[weight_i-2], 10);
 
 	    w0[weight_i] = weights[weight_i-16];
 	    w1[weight_i] = weights[weight_i-7];
@@ -186,12 +194,14 @@ module sha_algo(
 	    weights[weight_i] = (
 				 {weights[weight_i-15][6:0], weights[weight_i-15][31:7]} // 7
 				 ^ {weights[weight_i-15][17:0], weights[weight_i-15][31:18]} // 18
-				 ^ {weights[weight_i-15][2:0], weights[weight_i-15][31:3]} // 3
+				 // ^ {weights[weight_i-15][2:0], weights[weight_i-15][31:3]} // 3
+				 ^ (weights[weight_i-15] >> 3) // 3
 				 ) +
 				(
 				 {weights[weight_i-2][16:0], weights[weight_i-2][31:17]} // 17
 				 ^ {weights[weight_i-2][18:0], weights[weight_i-2][31:19]} // 19
-				 ^ {weights[weight_i-2][9:0], weights[weight_i-2][31:10]} // 10
+				 // ^ {weights[weight_i-2][9:0], weights[weight_i-2][31:10]} // 10
+				 ^ (weights[weight_i-2] >> 10) // 10
 				 ) +
 				weights[weight_i-16] +
 				weights[weight_i-7];
