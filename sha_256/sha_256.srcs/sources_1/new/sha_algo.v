@@ -65,6 +65,12 @@ module sha_algo(
 
    integer		       compression_iter_s = 0;
 
+   reg [31:0]		       s0 [63:0];
+   reg [31:0]		       s1 [63:0];
+   reg [31:0]		       w0 [63:0];
+   reg [31:0]		       w1 [63:0];
+
+
    function right_rotate;
       input [31:0]	       data;
       input [7:0]	       rotations;
@@ -79,6 +85,10 @@ module sha_algo(
 	 end
 
 	 right_rotate = retval;
+
+	 // right_rotate = {data[0 +: rotations], data[31 -: (32-rotations)]};
+	 // right_rotate = {data[rotations-1:0], data[31:rotations]};
+
       end
    endfunction
 
@@ -150,18 +160,42 @@ module sha_algo(
 
       else if(curr_state_s == `MAKE_WEIGHTS_STATE) begin
 	 for(weight_i=16; weight_i<64; weight_i = weight_i+1) begin
+
+	    s0[weight_i] = right_rotate(weights[weight_i-15], 7) ^ right_rotate(weights[weight_i-15], 18) ^ right_rotate(weights[weight_i-15], 3);
+	    // s1[weight_i] = right_rotate(weights[weight_i-15], 7);
+	    // w0[weight_i] = right_rotate(weights[weight_i-15], 18);
+	    // w1[weight_i] = right_rotate(weights[weight_i-15], 3);
+	    s1[weight_i] = right_rotate(weights[weight_i-2], 17) ^ right_rotate(weights[weight_i-2], 19) ^ right_rotate(weights[weight_i-2], 10);
+
+	    w0[weight_i] = weights[weight_i-16];
+	    w1[weight_i] = weights[weight_i-7];
+
+	    // weights[weight_i] = (
+	    //			 right_rotate(weights[weight_i-15], 7)
+	    //			 ^ right_rotate(weights[weight_i-15], 18)
+	    //			 ^ right_rotate(weights[weight_i-15], 3)
+	    //			 ) +
+	    //			(
+	    //			 right_rotate(weights[weight_i-2], 17)
+	    //			 ^ right_rotate(weights[weight_i-2], 19)
+	    //			 ^ right_rotate(weights[weight_i-2], 10)
+	    //			 ) +
+	    //			weights[weight_i-16] +
+	    //			weights[weight_i-7];
+
 	    weights[weight_i] = (
-				 right_rotate(weights[weight_i-15], 7)
-				 ^ right_rotate(weights[weight_i-15], 18)
-				 ^ right_rotate(weights[weight_i-15], 3)
+				 {weights[weight_i-15][6:0], weights[weight_i-15][31:7]} // 7
+				 ^ {weights[weight_i-15][17:0], weights[weight_i-15][31:18]} // 18
+				 ^ {weights[weight_i-15][2:0], weights[weight_i-15][31:3]} // 3
 				 ) +
-		      (
-		       right_rotate(weights[weight_i-2], 17)
-		       ^ right_rotate(weights[weight_i-2], 19)
-		       ^ right_rotate(weights[weight_i-2], 10)
-		       ) +
-		      weights[weight_i-16] +
-		      weights[weight_i-7];
+				(
+				 {weights[weight_i-2][16:0], weights[weight_i-2][31:17]} // 17
+				 ^ {weights[weight_i-2][18:0], weights[weight_i-2][31:19]} // 19
+				 ^ {weights[weight_i-2][9:0], weights[weight_i-2][31:10]} // 10
+				 ) +
+				weights[weight_i-16] +
+				weights[weight_i-7];
+
 	 end
       end
    end
