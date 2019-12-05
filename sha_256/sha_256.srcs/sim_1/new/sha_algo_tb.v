@@ -26,7 +26,10 @@ module sha_algo_tb();
    reg reset_s = 0;
 
    // Message port
-   reg [511:0] message_s = 512'h01234567_89ABCDEF;
+   // reg [511:0] message_s = 512'h01234567_89ABCDEF;
+
+   // "abcd" hash block
+   reg [511:0] message_s = 512'h61626364_80000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000020;
    wire	       message_ready_s;
    reg	       message_valid_s = 0;
 

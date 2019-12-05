@@ -125,20 +125,17 @@ module sha_algo(
 	 // Copy 32 bit words into first 16 slots of the message schedule array
 	 // for(message_i=0; message_i<16; message_i++) begin
 	 for(message_i=0; message_i<16; message_i = message_i+1) begin
-	    // weights[message_i] <= message_p[(((message_i+1)*32)-1):(message_i*32)];
-
-	    // weights[message_i] <= message_p[(((message_i+1)*32)-1) +: 32];
+	    // https://forums.xilinx.com/t5/Design-Entry/Verilog-Loop-error-range-must-be-bounded-by-constant-expressions/td-p/721765
 	    weights[message_i] <= message_p[(message_i*32) +: 32];
 	 end
       end
-      // else if curr_state_s == `MAKE_WEIGHTS_STATE begin
-      //	 // for(weight_i=0; weight_i<64; weight_i++) begin
 
-      //	 // end
+      // else if curr_state_s == `MAKE_WEIGHTS_STATE begin
+      //	 for(weight_i=16; weight_i<64; weight_i++) begin
+      //	    weights[message_i] <=
+      //	 end
       // end
    end
-
-
 
    // Assign hash value
    always @(posedge clk_p) begin
