@@ -20,17 +20,20 @@
 
 // States:
 // - Idle: Wait for message to be supplied
-// - Latch_Message: Latch message into internal signal
 // - Make_Weights: Produce message schedule array
 // - Compression: 64 iterations of the compression algorithm
 // - Hash_Finished: Output finished hash
 //////////////////////////////////////////////////////////////////////////////////
 
-`define IDLE_STATE           4'h0;
-`define LATCH_MESSAGE_STATE  4'h1;
-`define MAKE_WEIGHTS_STATE   4'h2;
-`define COMPRESSION_STATE    4'h3;
-`define HASH_FINISHED_STATE  4'h4;
+
+// Hash constants
+`define NUM_ITERATIONS_C 64
+
+// State definitions
+`define IDLE_STATE           4'h0
+`define MAKE_WEIGHTS_STATE   4'h2
+`define COMPRESSION_STATE    4'h3
+`define HASH_FINISHED_STATE  4'h4
 
 module sha_algo(
 		// Inputs
@@ -57,21 +60,69 @@ module sha_algo(
    integer		       weight_i=0;
    integer		       message_i=0;
 
+   reg [3:0]		       curr_state_s;
+   reg [3:0]		       next_state_s;
+
+   integer		       compression_iter_s = 0;
+
    assign hash_valid_p = 0;
    assign hash_p = hash_s;
    assign message_ready_p = ~busy_s;
 
+   // Next state logic
+   always @* begin
+      case (curr_state_s)
+	`IDLE_STATE:
+	  if(message_valid_p == 1) begin
+	     next_state_s <= `MAKE_WEIGHTS_STATE;
+
+	  end
+	  else begin
+	    next_state_s <= `IDLE_STATE;
+
+	  end
+
+	`MAKE_WEIGHTS_STATE:
+	  next_state_s <= `COMPRESSION_STATE;
+
+
+	`COMPRESSION_STATE:
+	  if(compression_iter_s >= `NUM_ITERATIONS_C-1) begin
+	     next_state_s <= `HASH_FINISHED_STATE;
+
+	  end
+	  else begin
+	    next_state_s <= `COMPRESSION_STATE;
+
+	  end
+
+	`HASH_FINISHED_STATE:
+	  next_state_s <= `IDLE_STATE;
+
+	default:
+	  next_state_s <= `IDLE_STATE; // default to IDLE
+      endcase // case curr_state_s
+   end
+
+   // Advance state
+   always @(posedge clk_p) begin
+      curr_state_s <= next_state_s;
+   end
+
+
    // Latch input message
    always @(posedge clk_p) begin
-      if (message_valid_p == 1 && busy_s == 0) begin
+      if(curr_state_s == `IDLE_STATE) begin
 	 message_s <= message_p;
       end
    end
+
 
    // Assign hash value
    always @(posedge clk_p) begin
       hash_s  <= 256'b0;
    end
+
 
    // Fill in weights
    always @* begin
