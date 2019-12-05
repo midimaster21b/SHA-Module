@@ -17,7 +17,8 @@
 // Revision 0.01 - File Created
 // Additional Comments:
 // 1. Assumes the supplied 512 bit block is properly formatted
-
+// 2. No back pressure is currently implemented
+//
 // States:
 // - Idle: Wait for message to be supplied
 // - Make_Weights: Produce message schedule array
