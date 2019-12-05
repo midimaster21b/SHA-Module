@@ -53,6 +53,7 @@ module sha_algo(
 
    reg [511:0]		       message_s;
    reg [255:0]		       hash_s;
+   reg 			       hash_valid_s;
    reg			       busy_s = 0;
 
    // 64 independently calculated 32 bit values
@@ -106,7 +107,7 @@ module sha_algo(
    endfunction
 
 
-   assign hash_valid_p = 0;
+   assign hash_valid_p = hash_valid_s;
    assign hash_p = hash_s;
    assign message_ready_p = ~busy_s;
 
@@ -139,6 +140,14 @@ module sha_algo(
 
 	`HASH_FINISHED_STATE:
 	  next_state_s <= `IDLE_STATE;
+	  // if(hash_ready_p == 1) begin
+	  //    next_state_s <= `IDLE_STATE;
+
+	  // end
+	  // else begin
+	  //    next_state_s <= `HASH_FINISHED_STATE;
+
+	  // end
 
 	default:
 	  next_state_s <= `IDLE_STATE; // default to IDLE
@@ -216,9 +225,11 @@ module sha_algo(
 		    (32'h1f83d9ab + compression_regs_s[6]),
 		    (32'h5be0cd19 + compression_regs_s[7])};
 
+	 hash_valid_s <= 1;
       end
       else begin
 	 hash_s <= 256'h0;
+	 hash_valid_s <= 0;
 
       end
    end
