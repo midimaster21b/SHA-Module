@@ -148,12 +148,24 @@ module sha_algo(
 	 end
       end
 
-      // else if curr_state_s == `MAKE_WEIGHTS_STATE begin
-      //	 for(weight_i=16; weight_i<64; weight_i++) begin
-      //	    weights[message_i] <=
-      //	 end
-      // end
+      else if(curr_state_s == `MAKE_WEIGHTS_STATE) begin
+	 for(weight_i=16; weight_i<64; weight_i = weight_i+1) begin
+	    weights[weight_i] = (
+				 right_rotate(weights[weight_i-15], 7)
+				 ^ right_rotate(weights[weight_i-15], 18)
+				 ^ right_rotate(weights[weight_i-15], 3)
+				 ) +
+		      (
+		       right_rotate(weights[weight_i-2], 17)
+		       ^ right_rotate(weights[weight_i-2], 19)
+		       ^ right_rotate(weights[weight_i-2], 10)
+		       ) +
+		      weights[weight_i-16] +
+		      weights[weight_i-7];
+	 end
+      end
    end
+
 
    // Assign hash value
    always @(posedge clk_p) begin
