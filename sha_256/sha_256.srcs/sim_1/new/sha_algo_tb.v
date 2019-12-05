@@ -27,13 +27,13 @@ module sha_algo_tb();
 
    // Message port
    reg [511:0] message_s = 512'b0;
-   wire	       message_ready_s = 0;
+   wire	       message_ready_s;
    reg	       message_valid_s = 0;
 
    // Hash port
    wire [255:0] hash_s;
    wire		hash_valid_s;
-   reg		hash_ready_s;
+   reg		hash_ready_s = 0;
 
    // Generate clock signal
    always #10 clk_s <= ~clk_s;
