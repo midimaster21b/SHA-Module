@@ -206,7 +206,21 @@ module sha_algo(
 
    // Assign hash value
    always @(posedge clk_p) begin
-      hash_s  <= 256'b0;
+      if(curr_state_s == `HASH_FINISHED_STATE) begin
+	 hash_s <= {(32'h6a09e667 + compression_regs_s[0]),
+		    (32'hbb67ae85 + compression_regs_s[1]),
+		    (32'h3c6ef372 + compression_regs_s[2]),
+		    (32'ha54ff53a + compression_regs_s[3]),
+		    (32'h510e527f + compression_regs_s[4]),
+		    (32'h9b05688c + compression_regs_s[5]),
+		    (32'h1f83d9ab + compression_regs_s[6]),
+		    (32'h5be0cd19 + compression_regs_s[7])};
+
+      end
+      else begin
+	 hash_s <= 256'h0;
+
+      end
    end
 
 
