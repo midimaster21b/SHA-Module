@@ -65,6 +65,24 @@ module sha_algo(
 
    integer		       compression_iter_s = 0;
 
+   function right_rotate;
+      input [31:0]	       data;
+      input [7:0]	       rotations;
+
+      integer		       rot_i;
+      reg [31:0]	       retval;
+
+      begin
+	 retval = data;
+	 for(rot_i=0; rot_i<rotations; rot_i = rot_i+1) begin
+	    retval = {retval[0], retval[31:1]};
+	 end
+
+	 right_rotate = retval;
+      end
+   endfunction
+
+
    assign hash_valid_p = 0;
    assign hash_p = hash_s;
    assign message_ready_p = ~busy_s;
