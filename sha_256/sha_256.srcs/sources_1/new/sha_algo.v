@@ -104,6 +104,7 @@ module sha_algo(
       endcase // case curr_state_s
    end
 
+
    // Advance state
    always @(posedge clk_p) begin
       curr_state_s <= next_state_s;
@@ -118,24 +119,28 @@ module sha_algo(
    end
 
 
+   // Fill in weights
+   always @* begin
+      if(curr_state_s == `IDLE_STATE) begin
+	 // Copy 32 bit words into first 16 slots of the message schedule array
+	 for(message_i=0; message_i<16; message_i = message_i+1) begin
+	    // weights[message_i] <= message_p[(((message_i+1)*32)-1):(message_i*32)];
+	    weights[message_i] <= message_p[(((message_i+1)*32)-1) +: 32];
+	 end
+      end
+      // else if curr_state_s == `MAKE_WEIGHTS_STATE begin
+      //	 // for(weight_i=0; weight_i<64; weight_i++) begin
+
+      //	 // end
+      // end
+   end
+
+
+
    // Assign hash value
    always @(posedge clk_p) begin
       hash_s  <= 256'b0;
    end
 
-
-   // Fill in weights
-   always @* begin
-      // if curr_state_s ==
-      //		       // Copy 32 bit words into first 16 slots of the message schedule array
-      //	for(message_i=0; message_i<16; message_i++) begin
-
-      //	end
-
-
-      // for(weight_i=0; weight_i<64; weight_i++) begin
-
-      // end
-   end
 
 endmodule
