@@ -26,7 +26,7 @@ module sha_algo_tb();
    reg reset_s = 0;
 
    // Message port
-   reg [511:0] message_s = 512'b0;
+   reg [511:0] message_s = 512'h01234567_89ABCDEF;
    wire	       message_ready_s;
    reg	       message_valid_s = 0;
 
@@ -37,6 +37,10 @@ module sha_algo_tb();
 
    // Generate clock signal
    always #10 clk_s <= ~clk_s;
+
+   // Start hash at 100 ns;
+   initial #100 message_valid_s <= 1;
+   initial #110 message_valid_s <= 0;
 
    sha_algo sha(
 		// Inputs

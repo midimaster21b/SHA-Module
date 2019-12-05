@@ -60,8 +60,8 @@ module sha_algo(
    integer		       weight_i=0;
    integer		       message_i=0;
 
-   reg [3:0]		       curr_state_s;
-   reg [3:0]		       next_state_s;
+   reg [3:0]		       curr_state_s = `IDLE_STATE;
+   reg [3:0]		       next_state_s = `IDLE_STATE;
 
    integer		       compression_iter_s = 0;
 
@@ -123,9 +123,12 @@ module sha_algo(
    always @* begin
       if(curr_state_s == `IDLE_STATE) begin
 	 // Copy 32 bit words into first 16 slots of the message schedule array
+	 // for(message_i=0; message_i<16; message_i++) begin
 	 for(message_i=0; message_i<16; message_i = message_i+1) begin
 	    // weights[message_i] <= message_p[(((message_i+1)*32)-1):(message_i*32)];
-	    weights[message_i] <= message_p[(((message_i+1)*32)-1) +: 32];
+
+	    // weights[message_i] <= message_p[(((message_i+1)*32)-1) +: 32];
+	    weights[message_i] <= message_p[(message_i*32) +: 32];
 	 end
       end
       // else if curr_state_s == `MAKE_WEIGHTS_STATE begin
