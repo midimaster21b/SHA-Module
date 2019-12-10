@@ -18,43 +18,22 @@
 // Additional Comments:
 //
 //////////////////////////////////////////////////////////////////////////////////
-module top(clk,
-	   reset,
-	   start,
-	   stop,
-	   key_addr,
-	   data_addr,
-	   data_in,
-	   we,
-	   data_out,
-	   length,
-	   key_out,
-	   encrypt_data_addr
+module top(
+	   input wire 	      clk,
+	   input wire 	      reset,
+	   input wire [1:0]   start,
+	   input wire [31:0]  data,   // Bytes being read
+	   input wire [8:0]   length, // How many bytes to read
+	   input wire [9:0]   encrypt_data_addr, // Where to start reading
+
+	   output wire [2:0]  stop, // Finish signal
+	   output wire [8:0]  data_addr, // Write data address
+	   output wire [31:0] hash_data, // Hash data output
+	   output wire [3:0]  we
 	   );
 
-   input clk,reset;
-   input [0:1] start;
-   //input [0:8]length;
-
    // ADDED PORTS
-   input [31:0] data_out;
-   input [31:0] key_out;
-   input [8:0]	length;
-   input [9:0]	encrypt_data_addr;
-
-   output [0:2] stop;
-   output [0:31] data_in;
-   output [0:7]  key_addr;
-   output [0:8]  data_addr;
-   output	 we;
-
-
-   wire [0:7]	 key_addr,en_key_addr;
-   // wire [0:31]	 key_out,data_in,en_data_in,data_out;
-   wire [0:31]	 en_data_in,data_out;
-   wire [0:8]	 en_data_addr,data_addr;
-   wire [0:2]	 en_stop;
-   wire		 we,en_we;
+   wire [31:0] 		      hash_data_s;
 
    /////////////////////////////////////////////////////////
 
@@ -78,29 +57,24 @@ module top(clk,
 
    /////////////////////////////////////////////////////////
 
-   assign stop = en_stop;
-
-   assign key_addr = en_key_addr;
-
-   assign we = en_we;
-
-   assign data_addr = en_data_addr;
-
-   assign data_in = (en_we) ? en_data_in : 32'h0;
+   assign we = 4'hf;
+   assign hash_data = (we == 4'hf) ? hash_data_s : 32'h0;
+   // assign hash_data = 32'h1234_ABCD;
+   // assign data_addr = encrypt_data_addr + 16;
+   assign data_addr = encrypt_data_addr + 8;
 
    /* *************** ENCRYPTION ************************ */
 
    encrypt E1(
+	      // Inputs
 	      .clk(clk),
 	      .reset(reset),
 	      .start(start),
-	      .stop(en_stop),
-	      .key_addr(en_key_addr),
-	      .key_in(key_out),
-	      .data_addr(en_data_addr),
-	      .data_in(data_out),
-	      .encrypt_data(en_data_in),
-	      .we(en_we)
+	      .data(data), // Data to be hashed
+
+	      // Outputs
+	      .finished(en_stop), // Finish signal
+	      .hash(hash_data_s)  // Output hash
 	      );
 
 endmodule
