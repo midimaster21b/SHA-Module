@@ -10,7 +10,7 @@ filesets:
 
   tb:
     files:
-      - sim/sha_algo_tb.sv
+      - sim/sha_algo_tb.v
     file_type: verilogSource
 
   basys3:
