@@ -45,6 +45,9 @@ module sha_algo_tb();
    initial #100 message_valid_s <= 1;
    initial #110 message_valid_s <= 0;
 
+   initial #2000 $stop;
+   initial #2000 $finish;
+
    sha_algo sha(
 		// Inputs
 		.clk_p(clk_s),
