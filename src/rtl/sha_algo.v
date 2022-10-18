@@ -101,9 +101,6 @@ module sha_algo(
 
 	 right_rotate = retval;
 
-	 // right_rotate = {data[0 +: rotations], data[31 -: (32-rotations)]};
-	 // right_rotate = {data[rotations-1:0], data[31:rotations]};
-
       end
    endfunction
 
@@ -141,17 +138,10 @@ module sha_algo(
 
 	`HASH_FINISHED_STATE:
 	  next_state_s <= `IDLE_STATE;
-	  // if(hash_ready_p == 1) begin
-	  //    next_state_s <= `IDLE_STATE;
-
-	  // end
-	  // else begin
-	  //    next_state_s <= `HASH_FINISHED_STATE;
-
-	  // end
 
 	default:
 	  next_state_s <= `IDLE_STATE; // default to IDLE
+
       endcase // case curr_state_s
    end
 
