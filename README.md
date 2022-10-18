@@ -9,9 +9,36 @@ Currently this project utilizes FuseSoC for automation of test and build.
 
 ## Usage
 
+### Setup
+
+Before starting these steps, make sure you have an installation of python3 available in your PATH environment variable.
+
+1. Clone the repository
+
+   `git clone https://github.com/midimaster21b/SHA-Module.git`
+
+1. Move into cloned repository
+
+   `cd SHA-Module`
+
+1. Create a venv python virtual env
+
+  `python -m venv env`
+
+1. Source the new virtual environment
+
+   `source env/bin/activate`
+
+1. Install the python requirements
+
+   `pip install -r requirements`
+
+
 ### Running the simulation
 
-fusesoc --cores-root . run --target sim midimaster21b:cryptography:sha256:0.1.0
+While in the base directory of the cloned repository
+
+`fusesoc --cores-root . run --target sim midimaster21b:cryptography:sha256:0.1.0`
 
 
 ## Limitations
