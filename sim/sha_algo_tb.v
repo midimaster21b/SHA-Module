@@ -48,6 +48,11 @@ module sha_algo_tb();
    initial #2000 $stop;
    initial #2000 $finish;
 
+   initial begin
+      $monitor("[%t] Hash Ready: %b - %h", $time, hash_valid_s, hash_s);
+   end
+
+   // DUT
    sha_algo sha(
 		// Inputs
 		.clk_p(clk_s),
