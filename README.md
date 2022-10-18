@@ -23,7 +23,7 @@ Before starting these steps, make sure you have an installation of python3 avail
 
 1. Create a venv python virtual env
 
-  `python -m venv env`
+   `python -m venv env`
 
 1. Source the new virtual environment
 
