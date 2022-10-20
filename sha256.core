@@ -13,6 +13,13 @@ filesets:
       - sim/sha_algo_tb.v
     file_type: verilogSource
 
+  tb_uvm:
+    files:
+      - src/rtl/sha_algo_wrapper.sv
+      - sim/sha_uvm_tb_top.sv
+      - sim/single_value_test.sv
+    file_type: systemVerilogSource
+
   basys3:
     files:
       - src/constraints/basys3.xdc: {file_type: xdc}
@@ -32,6 +39,19 @@ targets:
     filesets_append:
       - tb
     toplevel: sha_algo_tb
+
+  # Simulation UVM target
+  sim_uvm:
+    <<: *default
+    description: Simulate the design with UVM
+    default_tool: xsim
+    tools:
+      xsim:
+        xelab_options: [-L, uvm, --timescale, 1ns/1ns]
+    filesets_append:
+      - tb
+      - tb_uvm
+    toplevel: sha_uvm_tb_top
 
   # Synthesis target
   synth:
