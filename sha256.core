@@ -24,6 +24,10 @@ filesets:
       - sim/uvm/msg_agent.sv
       - sim/uvm/hash_if.sv
       - sim/uvm/hash_seq_item.sv
+      - sim/uvm/hash_seq.sv
+      - sim/uvm/hash_driver.sv
+      - sim/uvm/hash_monitor.sv
+      - sim/uvm/hash_agent.sv
       - sim/uvm/sha_scoreboard.sv
       - sim/uvm/sha_env.sv
       - src/rtl/sha_algo_wrapper.sv
