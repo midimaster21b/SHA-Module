@@ -50,18 +50,17 @@ class single_value_test extends uvm_test;
    endfunction // end_of_elaboration_phase
 
    virtual task run_phase (uvm_phase phase);
-      super.run_phase(phase);
-
       // Create the test message sequence
-      // msg_seq test_msgs = msg_seq::type_id::create("test_msgs");
+      msg_seq test_msgs = msg_seq::type_id::create("test_msgs");
 
+      super.run_phase(phase);
 
       phase.raise_objection(this);
 
       /************************************************************************
        * Supply test messages to message sequencer
        ************************************************************************/
-      // test_msgs.start(env_e0.msg_a0.s0);
+      test_msgs.start(env_e0.msg_a0.s0);
 
       `uvm_info("TEST", "TEST IS RUNNING!!!", UVM_LOW)
       #100us phase.drop_objection(this);
