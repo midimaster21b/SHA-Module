@@ -15,6 +15,17 @@ filesets:
 
   tb_uvm:
     files:
+      - sim/uvm/test_pkg.sv
+      - sim/uvm/msg_if.sv
+      - sim/uvm/msg_seq_item.sv
+      - sim/uvm/msg_seq.sv
+      - sim/uvm/msg_driver.sv
+      - sim/uvm/msg_monitor.sv
+      - sim/uvm/msg_agent.sv
+      - sim/uvm/hash_if.sv
+      - sim/uvm/hash_seq_item.sv
+      - sim/uvm/sha_scoreboard.sv
+      - sim/uvm/sha_env.sv
       - src/rtl/sha_algo_wrapper.sv
       - sim/sha_uvm_tb_top.sv
       - sim/single_value_test.sv

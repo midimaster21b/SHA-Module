@@ -35,6 +35,8 @@ class single_value_test extends uvm_test;
 
    virtual task run_phase (uvm_phase phase);
       phase.raise_objection(this);
+      `uvm_info("TEST", "TEST IS RUNNING!!!", UVM_LOW)
+      #100ns phase.drop_objection(this);
    endtask
 
 endclass

@@ -19,26 +19,26 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// Message
-interface msg_if ();
-   logic [511:0]       message;
-   logic	       message_valid;
-   logic	       message_ready;
+// // Message
+// interface msg_if ();
+//    logic [511:0]       message;
+//    logic	       message_valid;
+//    logic	       message_ready;
 
-   modport TB  (output message, message_valid, input  message_ready);
-   modport DUT (input  message, message_valid, output message_ready);
-endinterface // msg_if
+//    modport TB  (output message, message_valid, input  message_ready);
+//    modport DUT (input  message, message_valid, output message_ready);
+// endinterface // msg_if
 
 
-// Hash
-interface hash_if ();
-   logic [255:0]       hash;
-   logic	       hash_valid;
-   logic	       hash_ready;
+// // Hash
+// interface hash_if ();
+//    logic [255:0]       hash;
+//    logic	       hash_valid;
+//    logic	       hash_ready;
 
-   modport TB  (output hash_ready, input  hash, hash_valid);
-   modport DUT (input  hash_ready, output hash, hash_valid);
-endinterface // hash_if
+//    modport TB  (output hash_ready, input  hash, hash_valid);
+//    modport DUT (input  hash_ready, output hash, hash_valid);
+// endinterface // hash_if
 
 
 module sha_algo_wrapper(
@@ -60,14 +60,14 @@ module sha_algo_wrapper(
 		 .reset_p(rst_p),
 
 		 // Message
-		 .message_p(msg.message),
-		 .message_valid_p(msg.message_valid),
-		 .message_ready_p(msg.message_ready),
+		 .message_p(msg.msg_data),
+		 .message_valid_p(msg.msg_valid),
+		 .message_ready_p(msg.msg_rdy),
 
 		 // Hash
-		 .hash_p(hash.hash),
+		 .hash_p(hash.hash_data),
 		 .hash_valid_p(hash.hash_valid),
-		 .hash_ready_p(hash.hash_ready)
+		 .hash_ready_p(hash.hash_rdy)
 		 );
 
 endmodule
