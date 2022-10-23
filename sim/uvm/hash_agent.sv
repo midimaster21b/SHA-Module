@@ -15,20 +15,20 @@ class hash_agent extends uvm_agent;
       super.new(name, parent);
    endfunction // new
 
-   hash_driver                    d0;
-   hash_monitor                   m0;
-   uvm_sequencer #(hash_seq_item) s0;
+   hash_driver                    d1;
+   hash_monitor                   m1;
+   uvm_sequencer #(hash_seq_item) s1;
    
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      s0 = uvm_sequencer#(hash_seq_item)::type_id::create("s0", this);
-      d0 = hash_driver::type_id::create("d0", this);
-      m0 = hash_monitor::type_id::create("m0", this);
+      s1 = uvm_sequencer#(hash_seq_item)::type_id::create("s1", this);
+      d1 = hash_driver::type_id::create("d1", this);
+      m1 = hash_monitor::type_id::create("m1", this);
    endfunction // build_phase
 
    virtual function void connect_phase(uvm_phase phase);
       super.connect_phase(phase);
       // Connect the sequencer export port to the driver sequence port
-      d0.seq_item_port.connect(s0.seq_item_export);
+      d1.seq_item_port.connect(s1.seq_item_export);
    endfunction // connect_phase
 endclass // hash_agent

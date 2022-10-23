@@ -35,6 +35,6 @@ class sha_env extends uvm_env;
 
       // Connect the hash monitor analysis port to the scoreboard analysis
       // implementation port
-      hash_a0.m0.mon_analysis_port.connect(sha_sb0.hash_analysis_imp);
+      hash_a0.m1.mon_analysis_port.connect(sha_sb0.hash_analysis_imp);
    endfunction // connect_phase
 endclass // sha_env

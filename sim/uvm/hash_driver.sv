@@ -16,7 +16,7 @@ class hash_driver extends uvm_driver #(hash_seq_item);
    function new(string name = "driver", uvm_component parent=null);
       super.new(name, parent);
    endfunction // new
-   
+
 
    /*
     * Function overriding the build phase of UVM
@@ -36,7 +36,7 @@ class hash_driver extends uvm_driver #(hash_seq_item);
 
    /*
     * Task overriding the run phase of UVM.
-    * The run_phase is the only phase that is a task because it is the only 
+    * The run_phase is the only phase that is a task because it is the only
     * phase which consumes time. The other phases are all functions because they
     * do not consume time.
     */
@@ -50,6 +50,7 @@ class hash_driver extends uvm_driver #(hash_seq_item);
       // the run phase objection, it can be allowed to loop indefinitely and the
       // function will exit when the objection is dropped.
       forever begin
+	 @(vif.cb);
 	 // The driver should always be ready for now
 	 vif.hash_rdy <= 1;
 
@@ -59,7 +60,7 @@ class hash_driver extends uvm_driver #(hash_seq_item);
 	 // // Get the next hash from the sequencer using the UVM TLM port
 	 // `uvm_info("HASH_DRV", $sformatf("Waiting for hash from sequencer"), UVM_HIGH)
 	 // seq_item_port.get_next_item(hash);
-	 
+
 	 // // Drive the interface
 	 // drive_item(hash);
 
@@ -68,18 +69,18 @@ class hash_driver extends uvm_driver #(hash_seq_item);
       end // forever begin
    endtask // run_phase
 
-   // TODO: This should handle backpressure (i.e. check the hash ready value 
-   // prior to writing).
-   virtual task drive_item(hash_seq_item hash);
-      // // Drive the hash value and valid signal for one clock cycle
-      // @(vif.cb);
-      // vif.cb.hash_data  <= hash.message;
-      // vif.cb.hash_valid <= 1;
-      
-      // // Clear the hash value and valid signal after one clock cycle
-      // @(vif.cb);
-      // vif.cb.hash_data  <= 0;
-      // vif.cb.hash_valid <= 0;
-      // vif.hash_ready <= 0;
-   endtask // drive_item
+   // // TODO: This should handle backpressure (i.e. check the hash ready value
+   // // prior to writing).
+   // virtual task drive_item(hash_seq_item hash);
+   //    // // Drive the hash value and valid signal for one clock cycle
+   //    // @(vif.cb);
+   //    // vif.cb.hash_data  <= hash.message;
+   //    // vif.cb.hash_valid <= 1;
+
+   //    // // Clear the hash value and valid signal after one clock cycle
+   //    // @(vif.cb);
+   //    // vif.cb.hash_data  <= 0;
+   //    // vif.cb.hash_valid <= 0;
+   //    // vif.hash_ready <= 0;
+   // endtask // drive_item
 endclass // hash_driver

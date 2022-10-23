@@ -9,6 +9,7 @@ class hash_seq_item extends uvm_sequence_item;
 
    // Class properties
    rand bit [255:0] hash;
+   // rand bit [7:0] hash;
 
    virtual function string convert2str();
       return $sformatf("%x", hash);

@@ -8,8 +8,9 @@ class msg_seq_item extends uvm_sequence_item;
    `uvm_object_utils(msg_seq_item)
 
    // Class properties
-   // bit [511:0] message = 512'h00000020_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_80000000_61626364;
-   rand bit [511:0] message;
+   bit [511:0] message = 512'h00000020_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000_80000000_61626364;
+   // rand bit [511:0] message;
+   // rand bit [7:0] message;
 
    virtual function string convert2str();
       return $sformatf("%x", message);
