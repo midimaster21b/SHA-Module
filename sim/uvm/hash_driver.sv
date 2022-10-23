@@ -26,7 +26,10 @@ class hash_driver extends uvm_driver #(hash_seq_item);
       super.build_phase(phase);
 
       // If the hash interface is not in the config db, raise a fatal error and hash
-      if(!uvm_config_db#(virtual hash_if)::get(this, "", "hash_vif", vif))
+      // if(!uvm_config_db#(virtual hash_if)::get(this, "", "hash_vif", vif))
+      // if(!uvm_config_db#(virtual hash_if)::get(this, "", "dut_hash_vif", vif))
+      // if(!uvm_config_db#(virtual hash_if)::get(this, "uvm_test_top", "hash_if", vif))
+      if(!uvm_config_db#(virtual hash_if)::get(null, "uvm_test_top", "hash_if", vif))
 	`uvm_fatal("HASH_DRV", "Could not get hash interface")
    endfunction // build_phase
 

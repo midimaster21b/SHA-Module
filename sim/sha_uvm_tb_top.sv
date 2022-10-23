@@ -37,11 +37,19 @@ module sha_uvm_tb_top;
 
    initial begin
       // Add interface handles to config database
+      // uvm_config_db #(virtual msg_if)::set (null, "uvm_test_top", "dut_msg_vif", dut_msg_if);
+      // uvm_config_db #(virtual hash_if)::set (null, "uvm_test_top", "dut_hash_vif", dut_hash_if);
       uvm_config_db #(virtual msg_if)::set (null, "uvm_test_top", "msg_if", dut_msg_if);
       uvm_config_db #(virtual hash_if)::set (null, "uvm_test_top", "hash_if", dut_hash_if);
 
       // Run the test
       run_test ("single_value_test");
    end
+
+   // // Dump the waveforms
+   // initial begin
+   //    $dumpvars;
+   //    $dumpfile("waveforms.vcd");
+   // end
 
 endmodule

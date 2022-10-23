@@ -18,7 +18,8 @@ class msg_monitor extends uvm_monitor;
    
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
-      if(!uvm_config_db#(virtual msg_if)::get(this, "", "msg_if", vif))
+      // if(!uvm_config_db#(virtual msg_if)::get(this, "", "msg_if", vif))
+      if(!uvm_config_db#(virtual msg_if)::get(null, "uvm_test_top", "msg_if", vif))
 	`uvm_fatal("MSG_MON", "Could not get message interface")
       mon_analysis_port = new("mon_analysis_port", this);
    endfunction // build_phase

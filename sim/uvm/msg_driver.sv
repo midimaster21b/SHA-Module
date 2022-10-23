@@ -26,7 +26,9 @@ class msg_driver extends uvm_driver #(msg_seq_item);
       super.build_phase(phase);
 
       // If the message interface is not in the config db, raise a fatal error and message
-      if(!uvm_config_db#(virtual msg_if)::get(this, "", "msg_vif", vif))
+      // if(!uvm_config_db#(virtual msg_if)::get(this, "", "msg_vif", vif))
+      // if(!uvm_config_db#(virtual msg_if)::get(this, "", "msg_if", vif))
+      if(!uvm_config_db#(virtual msg_if)::get(null, "uvm_test_top", "msg_if", vif))
 	`uvm_fatal("MSG_DRV", "Could not get message interface")
    endfunction // build_phase
 

@@ -45,12 +45,12 @@ class sha_scoreboard extends uvm_scoreboard;
    
 
    // This function is called every time a message transaction is seen
-   virtual function write_msg_mon(msg_seq_item msg);
+   virtual function void write_msg_mon(msg_seq_item msg);
       `uvm_info("SCBD", $sformatf("Message found: %s", msg.convert2str()), UVM_LOW)
    endfunction // write
 
    // This function is called every time a hash transaction is seen
-   virtual function write_hash_mon(hash_seq_item hash);
+   virtual function void write_hash_mon(hash_seq_item hash);
       `uvm_info("SCBD", $sformatf("Hash found: %s", hash.convert2str()), UVM_LOW)
    endfunction // write
 
