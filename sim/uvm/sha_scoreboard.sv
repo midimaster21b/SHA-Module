@@ -7,12 +7,21 @@ import uvm_pkg::*;
 `include "uvm_macros.svh"
 
 import test_pkg::msg_seq_item;
+import test_pkg::hash_seq_item;
 
 class sha_scoreboard extends uvm_scoreboard;
    // Register the sha_scorecard with the UVM factory
    `uvm_component_utils(sha_scoreboard)
 
-   uvm_analysis_imp #(msg_seq_item, sha_scoreboard) m_analysis_imp;
+   `uvm_analysis_imp_decl(_msg_mon)
+   `uvm_analysis_imp_decl(_hash_mon)
+
+   // uvm_analysis_imp #(msg_seq_item, sha_scoreboard) msg_analysis_imp;
+   // uvm_analysis_imp #(hash_seq_item, sha_scoreboard) hash_analysis_imp;
+   uvm_analysis_imp_msg_mon #(msg_seq_item, sha_scoreboard) msg_analysis_imp;
+   uvm_analysis_imp_hash_mon #(hash_seq_item, sha_scoreboard) hash_analysis_imp;
+
+
 
    function new(string name="sha_scoreboard", uvm_component parent=null);
       super.new(name, parent);
@@ -24,14 +33,24 @@ class sha_scoreboard extends uvm_scoreboard;
    virtual function void build_phase(uvm_phase phase);
       super.build_phase(phase);
 
-      m_analysis_imp = new("m_analysis_imp", this);
+      msg_analysis_imp = new("msg_analysis_imp", this);
+      hash_analysis_imp = new("hash_analysis_imp", this);
 
       // TODO: Generate or retrieve reference pattern from uvm_config_db
    endfunction // build_phase
    
 
    // This function is called every time a message transaction is seen
-   virtual function write(msg_seq_item msg);
-      `uvm_info("SCBD", $sformatf("Message found: %s", msg.convert2str()), UVM_HIGH)
+   // virtual function write(msg_seq_item msg);
+   virtual function write_msg_mon(msg_seq_item msg);
+      `uvm_info("SCBD", $sformatf("Message found: %s", msg.convert2str()), UVM_LOW)
    endfunction // write
+
+   // This function is called every time a message transaction is seen
+   // virtual function write(hash_seq_item hash);
+   virtual function write_hash_mon(hash_seq_item hash);
+      `uvm_info("SCBD", $sformatf("Hash found: %s", hash.convert2str()), UVM_LOW)
+   endfunction // write
+
+
 endclass // sha_scoreboard

@@ -30,8 +30,8 @@ module sha_uvm_tb_top;
 
 
    // Instantiate DUT and interfaces
-   msg_if           dut_msg_if  ();
-   hash_if          dut_hash_if ();
+   msg_if           dut_msg_if  (clk);
+   hash_if          dut_hash_if (clk);
    sha_algo_wrapper dut_wr0 (.clk_p(clk), .rst_p(rst), .msg(dut_msg_if), .hash(dut_hash_if));
 
 
